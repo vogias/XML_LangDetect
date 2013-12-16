@@ -164,7 +164,6 @@ public class CheckConfig {
 		
 		if(config.checkAttributes())
 			System.out.println("Ook");
-		else
-			System.out.println("Shit");
+		
 	}
 }
