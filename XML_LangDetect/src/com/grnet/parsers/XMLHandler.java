@@ -28,23 +28,9 @@ public class XMLHandler {
 			LangDetectException {
 		
 
-		// InputStream inS = null;
-		//
-		// try {
-		// inS = new FileInputStream(
-		// "C:\\Users\\vogias\\Desktop\\COSMOS\\http_.s..s.portal.discoverthecosmos.eu.s.node.s.104968.xml");
-		//
-		// } catch (FileNotFoundException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-
 		SAXBuilder builder = new SAXBuilder();
 		File xml = new File(
-				"C:\\Users\\vogias\\Desktop\\COSMOS\\http_.s..s.portal.discoverthecosmos.eu.s.node.s.104968.xml");
+				"C:\\Users\\vogias\\Desktop\\Destination\\Identification\\TEST\\ODS_TEST__oai_dc_znam_2765079488_enc_1.xml");
 		Document document = (Document) builder.build(xml);
 		Element rootNode = document.getRootElement();
 		Record record = new Record();
