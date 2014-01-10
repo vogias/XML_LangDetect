@@ -16,6 +16,17 @@ import com.grnet.constants.Constants;
  */
 public class CheckConfig {
 	Properties props;
+	String inputClass;
+	String elements;
+	String att;
+	String tps;
+	String report;
+	String logPath;
+	String logFileName;
+
+	String profiles;
+	String prefix;
+	String uri;
 
 	public CheckConfig() {
 		props = new Properties();
@@ -28,7 +39,8 @@ public class CheckConfig {
 			props.load(new FileInputStream("configure.properties"));
 
 			if (checkInputClass() && checkElements() && checkAttributeName()
-					&& checkThreadPoolSize() && checkLogging() && checkReport())
+					&& checkThreadPoolSize() && checkLogging() && checkReport()
+					&& checkPrefix() && checkProfiles() && checkURI())
 				return true;
 			else
 				return false;
@@ -46,7 +58,7 @@ public class CheckConfig {
 	}
 
 	private boolean checkInputClass() {
-		String inputClass = props.getProperty(Constants.inputClass);
+		inputClass = props.getProperty(Constants.inputClass);
 
 		if (inputClass == null) {
 			System.err.println("detect.input.class attribute is not used...");
@@ -60,8 +72,55 @@ public class CheckConfig {
 		}
 	}
 
+	private boolean checkProfiles() {
+		profiles = props.getProperty(Constants.profiles);
+
+		if (profiles == null) {
+			System.err.println("detect.lang.profiles attribute is not used...");
+			return false;
+
+		} else if (profiles.equals("")) {
+			System.err
+					.println("detect.lang.profiles attribute has no value...");
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	private boolean checkPrefix() {
+		prefix = props.getProperty(Constants.prefix);
+
+		if (prefix == null) {
+			System.err.println("detect.schema.prefix attribute is not used...");
+			return false;
+
+		} else if (prefix.equals("")) {
+			System.err
+					.println("detect.schema.prefix attribute has no value...");
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	private boolean checkURI() {
+		uri = props.getProperty(Constants.uri);
+
+		if (uri == null) {
+			System.err.println("detect.schema.uri attribute is not used...");
+			return false;
+
+		} else if (uri.equals("")) {
+			System.err.println("detect.schema.uri attribute has no value...");
+			return false;
+		} else {
+			return true;
+		}
+	}
+
 	private boolean checkElements() {
-		String elements = props.getProperty(Constants.elements);
+		elements = props.getProperty(Constants.elements);
 
 		if (elements == null) {
 			System.err.println("detect.elements attribute is not used...");
@@ -76,7 +135,7 @@ public class CheckConfig {
 	}
 
 	private boolean checkAttributeName() {
-		String att = props.getProperty(Constants.attName);
+		att = props.getProperty(Constants.attName);
 
 		if (att == null) {
 			System.err
@@ -93,7 +152,7 @@ public class CheckConfig {
 	}
 
 	private boolean checkThreadPoolSize() {
-		String tps = props.getProperty(Constants.tPoolSize);
+		tps = props.getProperty(Constants.tPoolSize);
 
 		if (tps == null) {
 			System.err
@@ -127,7 +186,7 @@ public class CheckConfig {
 	}
 
 	private boolean checkReport() {
-		String report = props.getProperty(Constants.report);
+		report = props.getProperty(Constants.report);
 
 		if (report == null) {
 			System.err.println("detection.report attribute is not used...");
@@ -160,10 +219,10 @@ public class CheckConfig {
 	}
 
 	public static void main(String[] args) {
-		CheckConfig config=new CheckConfig();
-		
-		if(config.checkAttributes())
+		CheckConfig config = new CheckConfig();
+
+		if (config.checkAttributes())
 			System.out.println("Ook");
-		
+
 	}
 }

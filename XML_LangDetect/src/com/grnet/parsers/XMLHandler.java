@@ -4,7 +4,9 @@
 package com.grnet.parsers;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Properties;
 
 import org.ariadne.util.JDomUtils;
 import org.jdom.Attribute;
@@ -17,6 +19,7 @@ import org.jdom.input.SAXBuilder;
 import com.cybozu.labs.langdetect.Detector;
 import com.cybozu.labs.langdetect.DetectorFactory;
 import com.cybozu.labs.langdetect.LangDetectException;
+import com.grnet.constants.Constants;
 
 /**
  * @author vogias
@@ -26,7 +29,6 @@ public class XMLHandler {
 
 	public static void main(String[] args) throws JDOMException, IOException,
 			LangDetectException {
-		
 
 		SAXBuilder builder = new SAXBuilder();
 		File xml = new File(
@@ -37,10 +39,19 @@ public class XMLHandler {
 
 		record.setMetadata(rootNode);
 
-		Element title = JDomUtils.getXpathNode(
-				"//ods:general/ods:title/ods:string",
-				Namespace.getNamespace("ods", "http://ltsc.ieee.org/xsd/LOM"),
-				record.getMetadata());
+		Properties properties = new Properties();
+		properties.load(new FileInputStream("configure.properties"));
+
+		Element title = JDomUtils
+				.getXpathNode(
+						properties
+								.getProperty(com.grnet.constants.Constants.elements),
+						Namespace.getNamespace(
+								properties
+										.getProperty(com.grnet.constants.Constants.prefix),
+								properties
+										.getProperty(com.grnet.constants.Constants.uri)),
+						record.getMetadata());
 
 		if (title != null) {
 			String titleText = title.getText();
@@ -48,12 +59,14 @@ public class XMLHandler {
 			if (!titleText.equals("")) {
 				System.out.println("Title content:" + titleText);
 
-				DetectorFactory.loadProfile("profiles");
+				DetectorFactory.loadProfile(properties
+						.getProperty(Constants.profiles));
 				Detector detector = DetectorFactory.create();
 				detector.append(titleText);
 
 				String lang = detector.detect();
-				Attribute attribute = new Attribute("language", lang);
+				Attribute attribute = new Attribute(
+						properties.getProperty(Constants.attName), lang);
 				title.setAttribute(attribute);
 				String xmlString = JDomUtils.parseXml2string(record
 						.getMetadata().getDocument(), null);
