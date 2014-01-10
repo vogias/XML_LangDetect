@@ -3,121 +3,80 @@
  */
 package com.grnet.parsers;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.Stack;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import org.ariadne.util.JDomUtils;
+import org.jdom.Attribute;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Namespace;
+import org.jdom.input.SAXBuilder;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
+import com.cybozu.labs.langdetect.Detector;
+import com.cybozu.labs.langdetect.DetectorFactory;
+import com.cybozu.labs.langdetect.LangDetectException;
 
 /**
  * @author vogias
  * 
  */
-public class XMLHandler extends DefaultHandler {
+public class XMLHandler {
 
-	String[] elements;
-	String branche;
-	Stack<String> xPaths;
-
-	public XMLHandler() {
-		// TODO Auto-generated constructor stub
-
-		branche = "";
-		xPaths = new Stack<>();
-	}
-
-	public void startElement(String uri, String localName, String qName,
-			Attributes attributes) throws SAXException {
-		// TODO Auto-generated method stub
-		branche += qName.toLowerCase();
-		xPaths.push(branche);
-
-		branche += ".";
-	}
-
-	public void endElement(String uri, String localName, String qName)
-			throws SAXException {
-		// TODO Auto-generated method stub
-		String elmt = "";
-		qName = qName.toLowerCase();
-
-		if (branche.endsWith(qName + "" + ".")) {
-			branche = branche.substring(0, branche.length() - qName.length()
-					- 1);
-			// branche = branche.toLowerCase();
-			elmt = xPaths.elementAt(xPaths.size() - 1);
-			xPaths.removeElementAt(xPaths.size() - 1);
-			// System.out.println("--------End element-----");
-			 System.out.println(elmt);
-		}
+	public static void main(String[] args) throws JDOMException, IOException,
+			LangDetectException {
 		
-	}
 
-	public void startDocument() throws SAXException {
-		// TODO Auto-generated method stub
+		// InputStream inS = null;
+		//
+		// try {
+		// inS = new FileInputStream(
+		// "C:\\Users\\vogias\\Desktop\\COSMOS\\http_.s..s.portal.discoverthecosmos.eu.s.node.s.104968.xml");
+		//
+		// } catch (FileNotFoundException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 
-	}
+		SAXBuilder builder = new SAXBuilder();
+		File xml = new File(
+				"C:\\Users\\vogias\\Desktop\\COSMOS\\http_.s..s.portal.discoverthecosmos.eu.s.node.s.104968.xml");
+		Document document = (Document) builder.build(xml);
+		Element rootNode = document.getRootElement();
+		Record record = new Record();
 
-	public void endDocument() throws SAXException {
-		// TODO Auto-generated method stub
+		record.setMetadata(rootNode);
 
-	}
+		Element title = JDomUtils.getXpathNode(
+				"//ods:general/ods:title/ods:string",
+				Namespace.getNamespace("ods", "http://ltsc.ieee.org/xsd/LOM"),
+				record.getMetadata());
 
-	public void characters(char[] ch, int start, int length)
-			throws SAXException {
-		// TODO Auto-generated method stub
+		if (title != null) {
+			String titleText = title.getText();
 
-	}
+			if (!titleText.equals("")) {
+				System.out.println("Title content:" + titleText);
 
-	public void parseDocument(InputStream is) throws SAXException, IOException,
-			ParserConfigurationException {
-		// TODO Auto-generated method stub
-		SAXParserFactory spf = SAXParserFactory.newInstance();
+				DetectorFactory.loadProfile("profiles");
+				Detector detector = DetectorFactory.create();
+				detector.append(titleText);
 
-		Reader reader = new InputStreamReader(is, "UTF-8");
+				String lang = detector.detect();
+				Attribute attribute = new Attribute("language", lang);
+				title.setAttribute(attribute);
+				String xmlString = JDomUtils.parseXml2string(record
+						.getMetadata().getDocument(), null);
+				System.out.println(xmlString);
+			} else
+				System.err.println("No title content.");
 
-		InputSource inputStream = new InputSource(reader);
-		inputStream.setEncoding("UTF-8");
-
-		SAXParser parser = spf.newSAXParser();
-
-		parser.parse(inputStream, this);
-
-	}
-
-	public static void main(String[] args) {
-		XMLHandler handler = new XMLHandler();
-
-		InputStream inS = null;
-
-		try {
-			inS = new FileInputStream(
-					"C:\\Users\\vogias\\Desktop\\COSMOS\\http_.s..s.portal.discoverthecosmos.eu.s.node.s.104968.xml");
-			handler.parseDocument(inS);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} else
+			System.err.println("No title element.");
 
 	}
 }
