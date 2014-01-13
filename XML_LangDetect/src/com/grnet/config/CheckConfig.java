@@ -32,6 +32,15 @@ public class CheckConfig {
 		props = new Properties();
 
 	}
+	
+
+	/**
+	 * @return the props
+	 */
+	public Properties getProps() {
+		return props;
+	}
+
 
 	public boolean checkAttributes() {
 

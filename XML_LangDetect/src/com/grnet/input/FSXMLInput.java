@@ -17,10 +17,8 @@ public class FSXMLInput extends Input {
 	@Override
 	public Collection<?> getData(Object var) {
 		// TODO Auto-generated method stub
-		String path = (String) var;
-		File source = new File(path);
 
-		return getXMLs(source);
+		return getXMLs((File) var);
 	}
 
 	private Collection<File> getXMLs(File dataProviderDir) {
