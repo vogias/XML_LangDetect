@@ -25,7 +25,7 @@ import com.grnet.constants.Constants;
  * @author vogias
  * 
  */
-public class XMLHandler {
+public class Worker {
 
 	public static void main(String[] args) throws JDOMException, IOException,
 			LangDetectException {
