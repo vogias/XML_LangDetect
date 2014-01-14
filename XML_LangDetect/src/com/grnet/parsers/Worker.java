@@ -34,17 +34,17 @@ public class Worker implements Runnable {
 
 	Properties properties;
 	File xml;
-	SAXBuilder builder;
+
 	String outputPath;
 	Stats stats;
 	boolean flag;
 	private Logger slf4jLogger;
 
-	public Worker(SAXBuilder builder, File xml, Properties properties,
-			String outputPath, Stats stats, Logger slf4jLogger) {
+	public Worker(File xml, Properties properties, String outputPath,
+			Stats stats, Logger slf4jLogger) {
 		this.xml = xml;
 		this.properties = properties;
-		this.builder = builder;
+
 		this.outputPath = outputPath;
 		this.stats = stats;
 		flag = false;
@@ -63,6 +63,7 @@ public class Worker implements Runnable {
 		String name = xml.getName();
 		Document document;
 		try {
+			SAXBuilder builder = new SAXBuilder();
 			document = (Document) builder.build(xml);
 
 			Element rootNode = document.getRootElement();

@@ -67,7 +67,7 @@ public class Entry {
 					+ input.getName());
 
 			System.out.println("----------------------------------------");
-			SAXBuilder builder = new SAXBuilder();
+			// SAXBuilder builder = new SAXBuilder();
 
 			String idClass = config.getProps()
 					.getProperty(Constants.inputClass);
@@ -97,8 +97,8 @@ public class Entry {
 
 			while (iterator.hasNext()) {
 
-				Worker worker = new Worker(builder, iterator.next(),
-						config.getProps(), output.getPath(), stats, slf4jLogger);
+				Worker worker = new Worker(iterator.next(), config.getProps(),
+						output.getPath(), stats, slf4jLogger);
 				executor.execute(worker);
 			}
 
