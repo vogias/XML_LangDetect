@@ -17,10 +17,13 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.input.SAXBuilder;
 
+import ch.qos.logback.core.status.Status;
+
 import com.cybozu.labs.langdetect.Detector;
 import com.cybozu.labs.langdetect.DetectorFactory;
 import com.cybozu.labs.langdetect.LangDetectException;
 import com.grnet.constants.Constants;
+import com.grnet.stats.Stats;
 
 /**
  * @author vogias
@@ -32,13 +35,17 @@ public class Worker implements Runnable {
 	File xml;
 	SAXBuilder builder;
 	String outputPath;
+	Stats stats;
+	boolean flag;
 
 	public Worker(SAXBuilder builder, File xml, Properties properties,
-			String outputPath) {
+			String outputPath, Stats stats) {
 		this.xml = xml;
 		this.properties = properties;
 		this.builder = builder;
 		this.outputPath = outputPath;
+		this.stats = stats;
+		flag = false;
 
 	}
 
@@ -100,6 +107,9 @@ public class Worker implements Runnable {
 									Attribute attribute = new Attribute(
 											chosenLangAtt, lang);
 									elmt.setAttribute(attribute);
+
+									stats.raiseElementsLangDetected();
+									flag = true;
 								}
 								// else
 								// System.out.println(chosenLangAtt
@@ -126,6 +136,9 @@ public class Worker implements Runnable {
 
 			OaiUtils.writeStringToFileInEncodingUTF8(xmlString, outputPath
 					+ File.separator + xml.getName());
+			if (flag)
+				stats.raiseFilesLangDetected();
+
 			// System.out.println(xmlString);
 
 		} catch (JDOMException | IOException e1) {

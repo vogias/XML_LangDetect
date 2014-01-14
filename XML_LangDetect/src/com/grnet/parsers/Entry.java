@@ -19,6 +19,7 @@ import com.cybozu.labs.langdetect.LangDetectException;
 import com.grnet.config.CheckConfig;
 import com.grnet.constants.Constants;
 import com.grnet.input.Input;
+import com.grnet.stats.Stats;
 
 /**
  * @author vogias
@@ -59,8 +60,13 @@ public class Entry {
 
 		if (config.checkAttributes()) {
 
+			StringBuffer logstring = new StringBuffer();
+
 			System.out.println("Starting lang detection on folder:"
 					+ input.getName());
+
+			logstring.append(input.getName());
+
 			System.out.println("--------------------------------");
 			SAXBuilder builder = new SAXBuilder();
 
@@ -72,6 +78,8 @@ public class Entry {
 			Input inpt = (Input) whatInstance;
 
 			Collection<File> data = (Collection<File>) inpt.getData(input);
+
+			Stats stats = new Stats(data.size());
 
 			int threadPoolSize = Integer.parseInt(config.getProps()
 					.getProperty(Constants.tPoolSize));
@@ -87,10 +95,11 @@ public class Entry {
 
 			DetectorFactory.loadProfile(config.getProps().getProperty(
 					Constants.profiles));
+
 			while (iterator.hasNext()) {
 
 				Worker worker = new Worker(builder, iterator.next(),
-						config.getProps(), output.getPath());
+						config.getProps(), output.getPath(), stats);
 				executor.execute(worker);
 			}
 
@@ -101,6 +110,12 @@ public class Entry {
 			long diff = end - start;
 			System.out.println("Duration:" + diff + "ms");
 			System.out.println("Done");
+
+			logstring.append(" " + stats.getSumFiles());
+			logstring.append(" " + stats.getFilesLangDetected());
+			logstring.append(" " + stats.getElementsLangDetected());
+
+			slf4jLogger.info(logstring.toString());
 		} else
 			System.err
 					.println("Please correct configuration.properties file attribute values");
