@@ -94,16 +94,15 @@ public class Worker implements Runnable {
 							// System.out.println("Element content:" +
 							// titleText);
 
-							try {
+							Attribute langAtt = elmt.getAttribute(properties
+									.getProperty(Constants.attName));
 
-								Attribute langAtt = elmt
-										.getAttribute(properties
-												.getProperty(Constants.attName));
+							String chosenLangAtt = properties
+									.getProperty(Constants.attName);
 
-								String chosenLangAtt = properties
-										.getProperty(Constants.attName);
+							if (langAtt == null) {
 
-								if (langAtt == null) {
+								try {
 									Detector detector = DetectorFactory
 											.create();
 									detector.append(titleText);
@@ -127,22 +126,23 @@ public class Worker implements Runnable {
 									slf4jLogger.info(logstring.toString());
 									stats.addElementD(elements[i]);
 									flag = true;
+								} catch (LangDetectException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
 								}
-								// else
-								// System.out.println(chosenLangAtt
-								// + " attribute exists.");
-
-							} catch (LangDetectException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
 							}
+							// else
+							// System.out.println(chosenLangAtt
+							// + " attribute exists.");
 
-						} else
-							System.err.println("No element content.");
+						}
+						// else
+						// System.err.println("No element content.");
 					}
 
-				} else
-					System.err.println("No elements.");
+				}
+				// else
+				// System.err.println("No elements.");
 
 				// System.out.println("Done");
 
