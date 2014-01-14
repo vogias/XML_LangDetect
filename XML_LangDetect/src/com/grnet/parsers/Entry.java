@@ -46,7 +46,7 @@ public class Entry {
 
 		File output = new File(args[1]);
 
-		if (!input.exists() || !output.isDirectory()) {
+		if (!input.exists() || !input.isDirectory()) {
 			System.err
 					.println("Input folder does not exist or it is not a folder.");
 			System.exit(-1);
