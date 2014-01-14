@@ -137,14 +137,12 @@ public class Worker implements Runnable {
 								e.printStackTrace();
 							}
 
-						}
-						// else
-						// System.err.println("No element content.");
+						} else
+							System.err.println("No element content.");
 					}
 
-				}
-				// else
-				// System.err.println("No elements.");
+				} else
+					System.err.println("No elements.");
 
 				// System.out.println("Done");
 
@@ -166,6 +164,6 @@ public class Worker implements Runnable {
 		// System.out.println("Worker thread for file:" + xml.getName()
 		// + " is done.");
 		// System.out.println("-------------------------------------------------");
-		
+
 	}
 }
