@@ -120,11 +120,11 @@ public class Worker implements Runnable {
 									logstring.append(" "
 											+ name.substring(0,
 													name.lastIndexOf(".")));
-									logstring.append(" "
-											+ elmt.getParentElement().getName()
-											+ "." + elmt.getName());
+
+									logstring.append(" " + elements[i]);
 									logstring.append(" " + lang);
 									slf4jLogger.info(logstring.toString());
+									stats.addElementD(elements[i]);
 									flag = true;
 								}
 								// else

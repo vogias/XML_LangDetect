@@ -4,6 +4,7 @@
 package com.grnet.parsers;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
@@ -18,6 +19,7 @@ import com.cybozu.labs.langdetect.DetectorFactory;
 import com.cybozu.labs.langdetect.LangDetectException;
 import com.grnet.config.CheckConfig;
 import com.grnet.constants.Constants;
+import com.grnet.info.report;
 import com.grnet.input.Input;
 import com.grnet.stats.Stats;
 
@@ -60,11 +62,11 @@ public class Entry {
 
 		if (config.checkAttributes()) {
 
-			System.out.println("--------------------------------");
+			System.out.println("----------------------------------------");
 			System.out.println("Starting lang detection on folder:"
 					+ input.getName());
 
-			System.out.println("--------------------------------");
+			System.out.println("----------------------------------------");
 			SAXBuilder builder = new SAXBuilder();
 
 			String idClass = config.getProps()
@@ -107,6 +109,16 @@ public class Entry {
 			long diff = end - start;
 			System.out.println("Duration:" + diff + "ms");
 			System.out.println("Done");
+			System.out.println(stats.getElementsD());
+
+			try {
+				report report = new report(input.getName(), diff,
+						threadPoolSize, availableProcessors, output, stats);
+				report.createReport();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		} else
 			System.err
