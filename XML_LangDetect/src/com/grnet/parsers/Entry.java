@@ -60,13 +60,9 @@ public class Entry {
 
 		if (config.checkAttributes()) {
 
-			StringBuffer logstring = new StringBuffer();
-
 			System.out.println("--------------------------------");
 			System.out.println("Starting lang detection on folder:"
 					+ input.getName());
-
-			logstring.append(input.getName());
 
 			System.out.println("--------------------------------");
 			SAXBuilder builder = new SAXBuilder();
@@ -111,10 +107,6 @@ public class Entry {
 			long diff = end - start;
 			System.out.println("Duration:" + diff + "ms");
 			System.out.println("Done");
-
-			logstring.append(" " + stats.getSumFiles());
-			logstring.append(" " + stats.getFilesLangDetected());
-			logstring.append(" " + stats.getElementsLangDetected());
 
 		} else
 			System.err
