@@ -16,6 +16,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.input.SAXBuilder;
+import org.slf4j.Logger;
 
 import ch.qos.logback.core.status.Status;
 
@@ -37,15 +38,17 @@ public class Worker implements Runnable {
 	String outputPath;
 	Stats stats;
 	boolean flag;
+	private Logger slf4jLogger;
 
 	public Worker(SAXBuilder builder, File xml, Properties properties,
-			String outputPath, Stats stats) {
+			String outputPath, Stats stats, Logger slf4jLogger) {
 		this.xml = xml;
 		this.properties = properties;
 		this.builder = builder;
 		this.outputPath = outputPath;
 		this.stats = stats;
 		flag = false;
+		this.slf4jLogger = slf4jLogger;
 
 	}
 
@@ -57,6 +60,7 @@ public class Worker implements Runnable {
 				.println("-----------------------------------------------------");
 		System.out.println("Worker thread for file:" + xml.getName()
 				+ " is started.");
+		String name = xml.getName();
 		Document document;
 		try {
 			document = (Document) builder.build(xml);
@@ -109,6 +113,18 @@ public class Worker implements Runnable {
 									elmt.setAttribute(attribute);
 
 									stats.raiseElementsLangDetected();
+									StringBuffer logstring = new StringBuffer();
+
+									logstring.append(xml.getParentFile()
+											.getName());
+									logstring.append(" "
+											+ name.substring(0,
+													name.lastIndexOf(".")));
+									logstring.append(" "
+											+ elmt.getParentElement().getName()
+											+ "." + elmt.getName());
+									logstring.append(" " + lang);
+									slf4jLogger.info(logstring.toString());
 									flag = true;
 								}
 								// else
@@ -130,12 +146,13 @@ public class Worker implements Runnable {
 				// System.err.println("No elements.");
 
 				// System.out.println("Done");
+
 			}
 			String xmlString = JDomUtils.parseXml2string(record.getMetadata()
 					.getDocument(), null);
 
 			OaiUtils.writeStringToFileInEncodingUTF8(xmlString, outputPath
-					+ File.separator + xml.getName());
+					+ File.separator + name);
 			if (flag)
 				stats.raiseFilesLangDetected();
 

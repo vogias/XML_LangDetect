@@ -99,7 +99,7 @@ public class Entry {
 			while (iterator.hasNext()) {
 
 				Worker worker = new Worker(builder, iterator.next(),
-						config.getProps(), output.getPath(), stats);
+						config.getProps(), output.getPath(), stats, slf4jLogger);
 				executor.execute(worker);
 			}
 
@@ -115,7 +115,6 @@ public class Entry {
 			logstring.append(" " + stats.getFilesLangDetected());
 			logstring.append(" " + stats.getElementsLangDetected());
 
-			slf4jLogger.info(logstring.toString());
 		} else
 			System.err
 					.println("Please correct configuration.properties file attribute values");
