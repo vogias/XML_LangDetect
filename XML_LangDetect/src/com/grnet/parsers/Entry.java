@@ -109,15 +109,20 @@ public class Entry {
 			long diff = end - start;
 			System.out.println("Duration:" + diff + "ms");
 			System.out.println("Done");
-			System.out.println(stats.getElementsD());
 
-			try {
-				report report = new report(input.getName(), diff,
-						threadPoolSize, availableProcessors, output, stats);
-				report.createReport();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if (config.getProps().getProperty(Constants.report)
+					.equalsIgnoreCase("true")) {
+				try {
+					System.out.println("Creating report...");
+					report report = new report(input.getName(), diff,
+							threadPoolSize, availableProcessors, output, stats);
+					report.createReport();
+					System.out.println("Done");
+
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 
 		} else
