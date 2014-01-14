@@ -62,6 +62,7 @@ public class Entry {
 
 			StringBuffer logstring = new StringBuffer();
 
+			System.out.println("--------------------------------");
 			System.out.println("Starting lang detection on folder:"
 					+ input.getName());
 

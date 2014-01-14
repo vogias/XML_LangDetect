@@ -56,10 +56,10 @@ public class Worker implements Runnable {
 	public void run() {
 		// TODO Auto-generated method stub
 
-		System.out
-				.println("-----------------------------------------------------");
-		System.out.println("Worker thread for file:" + xml.getName()
-				+ " is started.");
+		// System.out
+		// .println("-----------------------------------------------------");
+		// System.out.println("Worker thread for file:" + xml.getName()
+		// + " is started.");
 		String name = xml.getName();
 		Document document;
 		try {
@@ -162,8 +162,8 @@ public class Worker implements Runnable {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		System.out.println("Worker thread for file:" + xml.getName()
-				+ " is done.");
-		System.out.println("-------------------------------------------------");
+		// System.out.println("Worker thread for file:" + xml.getName()
+		// + " is done.");
+		// System.out.println("-------------------------------------------------");
 	}
 }
