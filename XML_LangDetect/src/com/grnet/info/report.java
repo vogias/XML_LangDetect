@@ -35,8 +35,8 @@ public class report {
 		this.duration = duration;
 		this.threadPoolSize = threadPoolSize;
 		this.cores = cores;
-		ldReport = new File(destFolder, "langDetect_" + repo + "_Report"
-				+ ".txt");
+		ldReport = new File(destFolder.getParentFile(), "langDetect_" + repo
+				+ "_Report" + ".txt");
 		writer = new BufferedWriter(new FileWriter(ldReport));
 		this.stats = stats;
 	}
