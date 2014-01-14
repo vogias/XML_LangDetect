@@ -11,6 +11,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.jdom.input.SAXBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.cybozu.labs.langdetect.DetectorFactory;
 import com.cybozu.labs.langdetect.LangDetectException;
@@ -23,6 +25,9 @@ import com.grnet.input.Input;
  * 
  */
 public class Entry {
+	private static final Logger slf4jLogger = LoggerFactory
+			.getLogger(Entry.class);
+
 	public static void main(String[] args) throws InterruptedException,
 			InstantiationException, IllegalAccessException,
 			ClassNotFoundException, LangDetectException {
@@ -54,7 +59,9 @@ public class Entry {
 
 		if (config.checkAttributes()) {
 
-			System.out.println("Starting lang detection...");
+			System.out.println("Starting lang detection on folder:"
+					+ input.getName());
+			System.out.println("--------------------------------");
 			SAXBuilder builder = new SAXBuilder();
 
 			String idClass = config.getProps()

@@ -39,11 +39,17 @@ public class Worker implements Runnable {
 		this.properties = properties;
 		this.builder = builder;
 		this.outputPath = outputPath;
+
 	}
 
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
+
+		System.out
+				.println("-----------------------------------------------------");
+		System.out.println("Worker thread for file:" + xml.getName()
+				+ " is started.");
 		Document document;
 		try {
 			document = (Document) builder.build(xml);
@@ -58,7 +64,7 @@ public class Worker implements Runnable {
 
 			for (int i = 0; i < elements.length; i++) {
 
-				System.out.println("Checking element:" + elements[i]);
+				// System.out.println("Checking element:" + elements[i]);
 				List<Element> elementList = JDomUtils.getXpathList(elements[i],
 						Namespace.getNamespace(
 								properties.getProperty(Constants.prefix),
@@ -71,9 +77,10 @@ public class Worker implements Runnable {
 						Element elmt = elementList.get(j);
 						String titleText = elmt.getText();
 
-						System.out.println("Element number:" + j);
+						// System.out.println("Element number:" + j);
 						if (!titleText.equals("")) {
-							System.out.println("Element content:" + titleText);
+							// System.out.println("Element content:" +
+							// titleText);
 
 							try {
 
@@ -93,34 +100,40 @@ public class Worker implements Runnable {
 									Attribute attribute = new Attribute(
 											chosenLangAtt, lang);
 									elmt.setAttribute(attribute);
-								} else
-									System.out.println(chosenLangAtt
-											+ " attribute exists.");
+								}
+								// else
+								// System.out.println(chosenLangAtt
+								// + " attribute exists.");
 
 							} catch (LangDetectException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 
-						} else
-							System.err.println("No element content.");
+						}
+						// else
+						// System.err.println("No element content.");
 					}
 
-				} else
-					System.err.println("No elements.");
+				}
+				// else
+				// System.err.println("No elements.");
 
-				System.out.println("Done");
+				// System.out.println("Done");
 			}
 			String xmlString = JDomUtils.parseXml2string(record.getMetadata()
 					.getDocument(), null);
 
 			OaiUtils.writeStringToFileInEncodingUTF8(xmlString, outputPath
-					+ "\\" + xml.getName());
+					+ File.separator + xml.getName());
 			// System.out.println(xmlString);
 
 		} catch (JDOMException | IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		System.out.println("Worker thread for file:" + xml.getName()
+				+ " is done.");
+		System.out.println("-------------------------------------------------");
 	}
 }
