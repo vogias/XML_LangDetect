@@ -45,7 +45,7 @@ public class Entry {
 		File input = new File(args[0]);
 
 		File output = new File(args[1]);
-		
+
 		File bad = new File(args[2]);
 
 		if (!input.exists() || !input.isDirectory()) {
@@ -105,7 +105,7 @@ public class Entry {
 			while (iterator.hasNext()) {
 
 				Worker worker = new Worker(iterator.next(), config.getProps(),
-						output.getPath(), stats, slf4jLogger);
+						output.getPath(), bad.getPath(), stats, slf4jLogger);
 				executor.execute(worker);
 			}
 
