@@ -103,7 +103,7 @@ public class Worker implements Runnable {
 									.getProperty(Constants.attName);
 
 							if (langAtt == null) {
-
+								StringBuffer logstring = new StringBuffer();
 								try {
 									Detector detector = DetectorFactory
 											.create();
@@ -115,7 +115,6 @@ public class Worker implements Runnable {
 									elmt.setAttribute(attribute);
 
 									stats.raiseElementsLangDetected();
-									StringBuffer logstring = new StringBuffer();
 
 									logstring.append(xml.getParentFile()
 											.getName());
@@ -131,6 +130,12 @@ public class Worker implements Runnable {
 								} catch (LangDetectException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
+									logstring.append(xml.getParentFile()
+											.getName());
+									logstring.append(" "
+											+ name.substring(0,
+													name.lastIndexOf(".")));
+									logstring.append(" "+"NoLangDetected");
 									recon = false;
 								}
 							}
