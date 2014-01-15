@@ -136,6 +136,7 @@ public class Worker implements Runnable {
 											+ name.substring(0,
 													name.lastIndexOf(".")));
 									logstring.append(" "+"NoLangDetected");
+									slf4jLogger.info(logstring.toString());
 									recon = false;
 								}
 							}
