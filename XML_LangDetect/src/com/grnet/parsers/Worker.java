@@ -37,7 +37,7 @@ public class Worker implements Runnable {
 
 	String outputPath;
 	Stats stats;
-	boolean flag;
+	boolean flag, recon;
 	private Logger slf4jLogger;
 
 	public Worker(File xml, Properties properties, String outputPath,
@@ -48,6 +48,7 @@ public class Worker implements Runnable {
 		this.outputPath = outputPath;
 		this.stats = stats;
 		flag = false;
+		recon = true;
 		this.slf4jLogger = slf4jLogger;
 
 	}
@@ -129,6 +130,7 @@ public class Worker implements Runnable {
 								} catch (LangDetectException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
+									recon = false;
 								}
 							}
 							// else
@@ -147,13 +149,19 @@ public class Worker implements Runnable {
 				// System.out.println("Done");
 
 			}
-			String xmlString = JDomUtils.parseXml2string(record.getMetadata()
-					.getDocument(), null);
 
-			OaiUtils.writeStringToFileInEncodingUTF8(xmlString, outputPath
-					+ File.separator + name);
+			if (recon) {
+				String xmlString = JDomUtils.parseXml2string(record
+						.getMetadata().getDocument(), null);
+
+				OaiUtils.writeStringToFileInEncodingUTF8(xmlString, outputPath
+						+ File.separator + name);
+			}
 			if (flag)
 				stats.raiseFilesLangDetected();
+
+			if (recon == false)
+				stats.raiseFilessLangNotDetected();
 
 			// System.out.println(xmlString);
 

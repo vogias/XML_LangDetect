@@ -14,10 +14,12 @@ public class Stats {
 	private int filesLangDetected, elementsLangDetected;
 	int sumFiles;
 	private HashMap<String, Integer> elementsDetected;
+	int unrecognisedFiles;
 
 	public Stats(int sumFiles) {
 		this.sumFiles = sumFiles;
 		elementsDetected = new HashMap<>();
+		unrecognisedFiles = 0;
 	}
 
 	public synchronized void addElementD(String element) {
@@ -44,6 +46,14 @@ public class Stats {
 
 	public synchronized void raiseElementsLangDetected() {
 		elementsLangDetected++;
+	}
+
+	public synchronized void raiseFilessLangNotDetected() {
+		unrecognisedFiles++;
+	}
+
+	public int getFilesLangNotDetected() {
+		return unrecognisedFiles;
 	}
 
 	/**

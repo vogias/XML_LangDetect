@@ -68,6 +68,9 @@ public class report {
 		writer.append("Number of files lang detected:"
 				+ stats.getFilesLangDetected());
 		writer.newLine();
+		writer.append("Number of files not detected:"
+				+ stats.getFilesLangNotDetected());
+		writer.newLine();
 		writer.append("=========== Elements Lang Detected=========");
 		writer.newLine();
 
