@@ -35,16 +35,18 @@ public class Entry {
 			InstantiationException, IllegalAccessException,
 			ClassNotFoundException, LangDetectException {
 
-		if (args.length != 2) {
+		if (args.length != 3) {
 			System.err.println("Usage : ");
 			System.err
-					.println("java -jar com.grnet.parsers.Entry <input folder> <output folder>");
+					.println("java -jar com.grnet.parsers.Entry <input folder> <output folder> <bad folder>");
 			System.exit(-1);
 		}
 
 		File input = new File(args[0]);
 
 		File output = new File(args[1]);
+		
+		File bad = new File(args[2]);
 
 		if (!input.exists() || !input.isDirectory()) {
 			System.err
@@ -55,6 +57,11 @@ public class Entry {
 		if (!output.exists() || !output.isDirectory()) {
 			System.err
 					.println("Output folder does not exist or it is not a folder.");
+			System.exit(-1);
+		}
+		if (!bad.exists() || !bad.isDirectory()) {
+			System.err
+					.println("Bad files folder does not exist or it is not a folder.");
 			System.exit(-1);
 		}
 

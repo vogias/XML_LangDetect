@@ -35,17 +35,18 @@ public class Worker implements Runnable {
 	Properties properties;
 	File xml;
 
-	String outputPath;
+	String outputPath, bad;
 	Stats stats;
 	boolean flag, recon;
 	private Logger slf4jLogger;
 
 	public Worker(File xml, Properties properties, String outputPath,
-			Stats stats, Logger slf4jLogger) {
+			String bad, Stats stats, Logger slf4jLogger) {
 		this.xml = xml;
 		this.properties = properties;
 
 		this.outputPath = outputPath;
+		this.bad = bad;
 		this.stats = stats;
 		flag = false;
 		recon = true;
@@ -155,6 +156,12 @@ public class Worker implements Runnable {
 						.getMetadata().getDocument(), null);
 
 				OaiUtils.writeStringToFileInEncodingUTF8(xmlString, outputPath
+						+ File.separator + name);
+			} else {
+				String xmlString = JDomUtils.parseXml2string(record
+						.getMetadata().getDocument(), null);
+
+				OaiUtils.writeStringToFileInEncodingUTF8(xmlString, bad
 						+ File.separator + name);
 			}
 			if (flag)
