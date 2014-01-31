@@ -227,11 +227,11 @@ public class CheckConfig {
 		}
 	}
 
-	public static void main(String[] args) {
-		CheckConfig config = new CheckConfig();
-
-		if (config.checkAttributes())
-			System.out.println("Ook");
-
-	}
+	// public static void main(String[] args) {
+	// CheckConfig config = new CheckConfig();
+	//
+	// if (config.checkAttributes())
+	// System.out.println("Ook");
+	//
+	// }
 }
