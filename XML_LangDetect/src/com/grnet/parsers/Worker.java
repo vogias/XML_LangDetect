@@ -112,7 +112,8 @@ public class Worker implements Runnable {
 							String chosenLangAtt = properties
 									.getProperty(Constants.attName);
 
-							if (langAtt == null) {
+							if (langAtt == null
+									|| langAtt.getValue().equals("") || langAtt.getValue().equals("none")) {
 								StringBuffer logstring = new StringBuffer();
 								try {
 									Detector detector = DetectorFactory
@@ -145,7 +146,7 @@ public class Worker implements Runnable {
 									logstring.append(" "
 											+ name.substring(0,
 													name.lastIndexOf(".")));
-									logstring.append(" "+"NoLangDetected");
+									logstring.append(" " + "NoLangDetected");
 									slf4jLogger.info(logstring.toString());
 									recon = false;
 								}
