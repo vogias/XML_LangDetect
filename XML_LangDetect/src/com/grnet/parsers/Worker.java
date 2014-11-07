@@ -28,8 +28,6 @@ import org.jdom.Namespace;
 import org.jdom.input.SAXBuilder;
 import org.slf4j.Logger;
 
-import ch.qos.logback.core.status.Status;
-
 import com.cybozu.labs.langdetect.Detector;
 import com.cybozu.labs.langdetect.DetectorFactory;
 import com.cybozu.labs.langdetect.LangDetectException;
