@@ -140,7 +140,7 @@ public class Worker implements Runnable {
 									flag = true;
 								} catch (LangDetectException e) {
 									// TODO Auto-generated catch block
-									e.printStackTrace();
+								//	e.printStackTrace();
 									logstring.append(xml.getParentFile()
 											.getName());
 									logstring.append(" "
@@ -148,7 +148,12 @@ public class Worker implements Runnable {
 													name.lastIndexOf(".")));
 									logstring.append(" " + "NoLangDetected");
 									slf4jLogger.info(logstring.toString());
-									recon = false;
+									if (strict.equals("true"))
+										recon = false;
+									else {
+										recon = true;
+										continue;
+									}
 								}
 							}
 							// else
