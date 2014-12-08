@@ -21,7 +21,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.jdom.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -112,10 +111,12 @@ public class Entry {
 			DetectorFactory.loadProfile(config.getProps().getProperty(
 					Constants.profiles));
 
+			String strict = config.getProps().getProperty(Constants.strict);
 			while (iterator.hasNext()) {
 
 				Worker worker = new Worker(iterator.next(), config.getProps(),
-						output.getPath(), bad.getPath(), stats, slf4jLogger);
+						output.getPath(), bad.getPath(), stats, slf4jLogger,
+						strict);
 				executor.execute(worker);
 			}
 

@@ -43,13 +43,13 @@ public class Worker implements Runnable {
 	Properties properties;
 	File xml;
 
-	String outputPath, bad;
+	String outputPath, bad, strict;
 	Stats stats;
 	boolean flag, recon;
 	private Logger slf4jLogger;
 
 	public Worker(File xml, Properties properties, String outputPath,
-			String bad, Stats stats, Logger slf4jLogger) {
+			String bad, Stats stats, Logger slf4jLogger, String strict) {
 		this.xml = xml;
 		this.properties = properties;
 
@@ -59,6 +59,7 @@ public class Worker implements Runnable {
 		flag = false;
 		recon = true;
 		this.slf4jLogger = slf4jLogger;
+		this.strict = strict;
 
 	}
 
@@ -111,7 +112,8 @@ public class Worker implements Runnable {
 									.getProperty(Constants.attName);
 
 							if (langAtt == null
-									|| langAtt.getValue().equals("") || langAtt.getValue().equals("none")) {
+									|| langAtt.getValue().equals("")
+									|| langAtt.getValue().equals("none")) {
 								StringBuffer logstring = new StringBuffer();
 								try {
 									Detector detector = DetectorFactory

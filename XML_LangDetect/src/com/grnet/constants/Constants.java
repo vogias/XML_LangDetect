@@ -30,5 +30,6 @@ public class Constants {
 
 	public static String logPath = "log.file.path";
 	public static String logfileName = "log.file.name";
+	public static String strict = "detect.strict";
 
 }
