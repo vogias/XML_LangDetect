@@ -137,7 +137,8 @@ public class Worker implements Runnable {
 
 									slf4jLogger.info(logstring.toString());
 
-									System.out.println("Opening queue connection...");
+									System.out
+											.println("Opening queue connection...");
 									Connection connection = this.factory
 											.newConnection();
 									Channel channel = connection
@@ -150,7 +151,8 @@ public class Worker implements Runnable {
 
 									channel.close();
 									connection.close();
-									System.out.println("Opening queue connection...");
+									System.out
+											.println("Opening queue connection...");
 
 									stats.addElementD(elements[i]);
 									flag = true;
@@ -165,7 +167,6 @@ public class Worker implements Runnable {
 									logstring.append(" " + "NoLangDetected");
 									slf4jLogger.info(logstring.toString());
 
-									System.out.println("Opening queue connection...");
 									Connection connection = this.factory
 											.newConnection();
 									Channel channel = connection
@@ -178,7 +179,6 @@ public class Worker implements Runnable {
 
 									channel.close();
 									connection.close();
-									System.out.println("Done");
 
 									if (strict.equals("true"))
 										recon = false;
