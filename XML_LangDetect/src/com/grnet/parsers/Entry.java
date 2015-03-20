@@ -114,13 +114,14 @@ public class Entry {
 
 			String strict = config.getProps().getProperty(Constants.strict);
 
+			System.out.println("Factory");
 			ConnectionFactory factory = new ConnectionFactory();
 			factory.setHost(config.getProps().getProperty(Constants.queueHost));
 			factory.setUsername(config.getProps().getProperty(
 					Constants.queueUser));
 			factory.setPassword(config.getProps().getProperty(
 					Constants.queuePass));
-			
+			System.out.println("Done");
 
 			while (iterator.hasNext()) {
 
