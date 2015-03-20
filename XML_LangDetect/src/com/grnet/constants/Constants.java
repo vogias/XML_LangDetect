@@ -32,4 +32,7 @@ public class Constants {
 	public static String logfileName = "log.file.name";
 	public static String strict = "detect.strict";
 
+	public static String queueHost = "message.queue.server";
+	public static String queueUser = "message.queue.username";
+	public static String queuePass = "message.queue.password";
 }

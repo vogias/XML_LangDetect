@@ -31,6 +31,7 @@ import com.grnet.constants.Constants;
 import com.grnet.info.report;
 import com.grnet.input.Input;
 import com.grnet.stats.Stats;
+import com.rabbitmq.client.ConnectionFactory;
 
 /**
  * @author vogias
@@ -39,6 +40,7 @@ import com.grnet.stats.Stats;
 public class Entry {
 	private static final Logger slf4jLogger = LoggerFactory
 			.getLogger(Entry.class);
+	private final static String QUEUE_NAME = "lang_detection";
 
 	public static void main(String[] args) throws InterruptedException,
 			InstantiationException, IllegalAccessException,
@@ -83,7 +85,6 @@ public class Entry {
 					+ input.getName());
 
 			System.out.println("----------------------------------------");
-			// SAXBuilder builder = new SAXBuilder();
 
 			String idClass = config.getProps()
 					.getProperty(Constants.inputClass);
@@ -112,11 +113,20 @@ public class Entry {
 					Constants.profiles));
 
 			String strict = config.getProps().getProperty(Constants.strict);
+
+			ConnectionFactory factory = new ConnectionFactory();
+			factory.setHost(config.getProps().getProperty(Constants.queueHost));
+			factory.setUsername(config.getProps().getProperty(
+					Constants.queueUser));
+			factory.setPassword(config.getProps().getProperty(
+					Constants.queuePass));
+			
+
 			while (iterator.hasNext()) {
 
 				Worker worker = new Worker(iterator.next(), config.getProps(),
 						output.getPath(), bad.getPath(), stats, slf4jLogger,
-						strict);
+						strict, QUEUE_NAME, factory);
 				executor.execute(worker);
 			}
 

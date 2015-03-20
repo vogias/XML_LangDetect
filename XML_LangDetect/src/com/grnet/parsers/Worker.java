@@ -33,6 +33,9 @@ import com.cybozu.labs.langdetect.DetectorFactory;
 import com.cybozu.labs.langdetect.LangDetectException;
 import com.grnet.constants.Constants;
 import com.grnet.stats.Stats;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
 
 /**
  * @author vogias
@@ -43,13 +46,15 @@ public class Worker implements Runnable {
 	Properties properties;
 	File xml;
 
-	String outputPath, bad, strict;
+	String outputPath, bad, strict, queue;
 	Stats stats;
 	boolean flag, recon;
 	private Logger slf4jLogger;
+	ConnectionFactory factory;
 
 	public Worker(File xml, Properties properties, String outputPath,
-			String bad, Stats stats, Logger slf4jLogger, String strict) {
+			String bad, Stats stats, Logger slf4jLogger, String strict,
+			String queue, ConnectionFactory factory) {
 		this.xml = xml;
 		this.properties = properties;
 
@@ -60,6 +65,8 @@ public class Worker implements Runnable {
 		recon = true;
 		this.slf4jLogger = slf4jLogger;
 		this.strict = strict;
+		this.factory = factory;
+		this.queue = queue;
 
 	}
 
@@ -67,10 +74,6 @@ public class Worker implements Runnable {
 	public void run() {
 		// TODO Auto-generated method stub
 
-		// System.out
-		// .println("-----------------------------------------------------");
-		// System.out.println("Worker thread for file:" + xml.getName()
-		// + " is started.");
 		String name = xml.getName();
 		Document document;
 		try {
@@ -87,7 +90,6 @@ public class Worker implements Runnable {
 
 			for (int i = 0; i < elements.length; i++) {
 
-				// System.out.println("Checking element:" + elements[i]);
 				List<Element> elementList = JDomUtils.getXpathList(elements[i],
 						Namespace.getNamespace(
 								properties.getProperty(Constants.prefix),
@@ -100,10 +102,7 @@ public class Worker implements Runnable {
 						Element elmt = elementList.get(j);
 						String titleText = elmt.getText();
 
-						// System.out.println("Element number:" + j);
 						if (!titleText.equals("")) {
-							// System.out.println("Element content:" +
-							// titleText);
 
 							Attribute langAtt = elmt.getAttribute(properties
 									.getProperty(Constants.attName));
@@ -135,12 +134,27 @@ public class Worker implements Runnable {
 
 									logstring.append(" " + elements[i]);
 									logstring.append(" " + lang);
+
 									slf4jLogger.info(logstring.toString());
+
+									Connection connection = this.factory
+											.newConnection();
+									Channel channel = connection
+											.createChannel();
+									channel.queueDeclare(this.queue, false,
+											false, false, null);
+
+									channel.basicPublish("", this.queue, null,
+											logstring.toString().getBytes());
+
+									channel.close();
+									connection.close();
+
 									stats.addElementD(elements[i]);
 									flag = true;
 								} catch (LangDetectException e) {
 									// TODO Auto-generated catch block
-								//	e.printStackTrace();
+									// e.printStackTrace();
 									logstring.append(xml.getParentFile()
 											.getName());
 									logstring.append(" "
@@ -148,6 +162,20 @@ public class Worker implements Runnable {
 													name.lastIndexOf(".")));
 									logstring.append(" " + "NoLangDetected");
 									slf4jLogger.info(logstring.toString());
+
+									Connection connection = this.factory
+											.newConnection();
+									Channel channel = connection
+											.createChannel();
+									channel.queueDeclare(this.queue, false,
+											false, false, null);
+
+									channel.basicPublish("", this.queue, null,
+											logstring.toString().getBytes());
+
+									channel.close();
+									connection.close();
+
 									if (strict.equals("true"))
 										recon = false;
 									else {
@@ -156,20 +184,12 @@ public class Worker implements Runnable {
 									}
 								}
 							}
-							// else
-							// System.out.println(chosenLangAtt
-							// + " attribute exists.");
 
 						}
-						// else
-						// System.err.println("No element content.");
+
 					}
 
 				}
-				// else
-				// System.err.println("No elements.");
-
-				// System.out.println("Done");
 
 			}
 
@@ -192,15 +212,10 @@ public class Worker implements Runnable {
 			if (recon == false)
 				stats.raiseFilessLangNotDetected();
 
-			// System.out.println(xmlString);
-
 		} catch (JDOMException | IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		// System.out.println("Worker thread for file:" + xml.getName()
-		// + " is done.");
-		// System.out.println("-------------------------------------------------");
 
 	}
 }
